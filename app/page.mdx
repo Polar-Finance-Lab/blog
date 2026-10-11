@@ -1,0 +1,18 @@
+import Link from 'next/link'
+
+<div className="lab-hero">
+  <div className="eyebrow">POLAR FINANCE LAB / EST. 2026</div>
+  <h1>돈의 흐름을 만들고,<br />시스템의 한계를 묻습니다.</h1>
+  <p>계좌 하나에서 은행과 은행 사이까지.<br />직접 만들고, 실패를 재현하고, 측정하며 배우는 금융 실험실.</p>
+  <div className="hero-actions"><Link href="/posts/starting-the-lab/" className="primary-link">첫 번째 기록 읽기 ↗</Link><Link href="/roadmap/">실험 로드맵 보기 →</Link></div>
+  <div className="hero-note"><span className="status-dot" /> 현재 단계 · 미니 코어뱅킹 설계</div>
+</div>
+<div className="section-heading"><span>RESEARCH TRACKS</span><span>01 — 03</span></div>
+<div className="track-grid">
+  <Link href="/roadmap/#core"><div className="track-number">01 / CORE BANKING</div><h2>작은 은행 만들기</h2><p>계좌, 원장, 잔액과 당행 이체.<br />돈을 기록하는 기본 규칙부터.</p><span>설계 예정 ↗</span></Link>
+  <Link href="/roadmap/#concurrency"><div className="track-number">02 / CONCURRENCY</div><h2>동시에 일어나는 일들</h2><p>락, 멱등성, 경합과 처리량.<br />빠르면서 정확할 수 있을까?</p><span>실험 예정 ↗</span></Link>
+  <Link href="/roadmap/#distributed"><div className="track-number">03 / DISTRIBUTED SYSTEMS</div><h2>은행과 은행 사이</h2><p>송금, 응답 유실, 대사와 복구.<br />실패한 거래의 끝을 찾아서.</p><span>실험 예정 ↗</span></Link>
+</div>
+<div className="section-heading"><span>LATEST NOTE</span><span>실험의 시작</span></div>
+<Link href="/posts/starting-the-lab/" className="post-card"><div><span className="post-date">2026.10.11 · 시작하는 글</span><h2>내 금융 실험실을 시작하며</h2><p>계좌 하나를 만드는 일에서 출발해, 은행 간 송금과 장애 복구까지.</p></div><span className="post-arrow">↗</span></Link>
+<div className="lab-principle">문제 → 가설 → 재현 → 측정 → 개선 → 남은 질문</div>

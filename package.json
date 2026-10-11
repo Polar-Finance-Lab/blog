@@ -1,0 +1,26 @@
+{
+  "name": "polar-finance-lab",
+  "version": "1.0.0",
+  "description": "Polar Finance Lab · 금융 실험실",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && pagefind --site out --output-path out/_pagefind",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "next": "15.5.27",
+    "nextra": "4.6.1",
+    "nextra-theme-docs": "4.6.1",
+    "pagefind": "1.5.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "private": true,
+  "overrides": {
+    "zod": "4.1.12"
+  }
+}
