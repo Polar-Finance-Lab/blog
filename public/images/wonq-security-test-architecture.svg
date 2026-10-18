@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="575" viewBox="0 0 1200 575" role="img" aria-label="WON-Q Order 로컬 보안 테스트 아키텍처: 같은 LAN에 MacBook ARTEX와 Windows 서비스 연결">
+<defs><style>
+text{font-family:Arial,'Noto Sans KR',sans-serif;fill:#223652}
+.label{font-size:16px;font-weight:700}.small{font-size:13px;fill:#63738b}.head{font-size:17px;font-weight:700}.service{font-size:16px;font-weight:700}
+</style><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M1 1 L8 4.5 L1 8" fill="none" stroke="#7185a0" stroke-width="1.6"/></marker>
+</defs>
+<rect width="1200" height="575" rx="22" fill="#f7f7f3"/>
+<rect x="35" y="35" width="1130" height="510" rx="22" fill="#fff" stroke="#c8d5e5" stroke-width="2" stroke-dasharray="9 7"/>
+<rect x="58" y="16" width="218" height="37" rx="12" fill="#e9eff8"/><text x="167" y="40" font-size="16" font-weight="700" text-anchor="middle">Local Network · LAN</text>
+<rect x="63" y="99" width="287" height="369" rx="20" fill="#f1eafe" stroke="#ac98df" stroke-width="2"/>
+<text x="206" y="133" text-anchor="middle" class="head">MacBook · macOS</text>
+<rect x="98" y="158" width="217" height="160" rx="15" fill="#fff" stroke="#b9aadf"/>
+<rect x="145" y="180" width="124" height="76" rx="9" fill="#344865"/><rect x="153" y="188" width="108" height="60" rx="4" fill="#6b62bb"/><text x="207" y="224" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">ARTEX</text>
+<rect x="135" y="263" width="144" height="9" rx="4" fill="#9a9fb8"/>
+<text x="206" y="298" text-anchor="middle" class="small">Security Testing</text>
+<rect x="109" y="348" width="194" height="78" rx="12" fill="#fff" stroke="#c7b7e8"/>
+<text x="206" y="378" class="service" text-anchor="middle">Ollama</text><text x="206" y="404" class="small" text-anchor="middle">qwen3:8b</text>
+<path d="M350 281 H429" stroke="#7185a0" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<text x="389" y="259" class="small" text-anchor="middle">HTTP</text>
+<rect x="435" y="99" width="698" height="413" rx="20" fill="#edf5ff" stroke="#94b5de" stroke-width="2"/>
+<text x="784" y="134" class="head" text-anchor="middle">Windows Host · WON-Q Order</text>
+<rect x="469" y="162" width="626" height="91" rx="15" fill="#fff" stroke="#bad0eb"/>
+<rect x="495" y="183" width="160" height="50" rx="10" fill="#e8f0ff" stroke="#8baee1"/>
+<text x="575" y="213" text-anchor="middle" class="service">API Entry</text>
+<path d="M655 208 H722" fill="none" stroke="#7185a0" stroke-width="2.6" marker-end="url(#arrow)"/>
+<rect x="722" y="183" width="158" height="50" rx="10" fill="#e8f0ff" stroke="#8baee1"/>
+<text x="801" y="213" text-anchor="middle" class="service">Order Server</text>
+<path d="M880 208 H927" fill="none" stroke="#7185a0" stroke-width="2.6" marker-end="url(#arrow)"/>
+<rect x="927" y="183" width="137" height="50" rx="10" fill="#e8f0ff" stroke="#8baee1"/>
+<text x="995" y="213" text-anchor="middle" class="service">PG Server</text>
+<rect x="469" y="277" width="626" height="103" rx="15" fill="#fff" stroke="#bad0eb"/>
+<text x="489" y="299" class="small">Simulated payment partners</text>
+<rect x="496" y="316" width="169" height="43" rx="9" fill="#eaf2ff" stroke="#9ebadd"/>
+<text x="580" y="343" text-anchor="middle" class="label">AppCard</text>
+<rect x="693" y="316" width="169" height="43" rx="9" fill="#eaf2ff" stroke="#9ebadd"/>
+<text x="777" y="343" text-anchor="middle" class="label">Card Server</text>
+<rect x="889" y="316" width="169" height="43" rx="9" fill="#eaf2ff" stroke="#9ebadd"/>
+<text x="973" y="343" text-anchor="middle" class="label">Bank Server</text>
+<path d="M995 233 V260 H580 V316" stroke="#7185a0" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<path d="M665 337 H693 M862 337 H889" stroke="#7185a0" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+<rect x="469" y="408" width="626" height="76" rx="15" fill="#effaf1" stroke="#abd8b8"/>
+<rect x="707" y="419" width="151" height="51" rx="11" fill="#fff" stroke="#8bbaa0"/>
+<text x="782" y="441" text-anchor="middle" class="label">MySQL</text><text x="782" y="458" text-anchor="middle" class="small">Test DB</text>
+<path d="M801 253 V276" stroke="#7185a0" stroke-width="1.9" fill="none"/>
+<path d="M801 380 V408" stroke="#7185a0" stroke-width="2.2" fill="none" marker-end="url(#arrow)"/>
+<path d="M575 253 V395 H707 M995 253 V395 H858" stroke="#9eb3c9" stroke-dasharray="5 4" stroke-width="1.6" fill="none"/>
+</svg>
