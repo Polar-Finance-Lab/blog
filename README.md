@@ -14,8 +14,12 @@ main에 푸시하면 GitHub Actions로 배포합니다.
 
 ## 글 추가
 
-`app/posts/<slug>/page.mdx`를 만들고 frontmatter에 title, date, description을 적습니다.
-발행일은 실제 발행일로 기록합니다. 홈의 글 목록에 Next.js Link로 링크를 추가합니다.
+`app/posts/<slug>/page.mdx`를 만들고 frontmatter에 title, date, description, author, tags를 적습니다.
+발행일은 실제 발행일로 기록합니다. 홈 목록에 링크나 글 정보를 따로 등록하지 않습니다.
+빌드할 때 `getPosts()`가 글 메타데이터를 읽어 최신 날짜순으로 정렬합니다.
+홈 목록, 태그 필터와 개수, 태그별 페이지가 이 목록을 사용합니다.
+글 추가·수정 후 빌드하고 `npm run test:posts`로 누락과 메타데이터 불일치를 확인합니다.
+GitHub Actions도 이 검사를 통과한 결과만 배포합니다.
 글 작성 전 `writing-tone.md`를 읽습니다. 로드맵이나 예정 글을 임의로 추가하지 않습니다.
 
 ## 대표 이미지

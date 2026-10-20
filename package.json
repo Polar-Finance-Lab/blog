@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && pagefind --site out --output-path out/_pagefind",
-    "start": "next start"
+    "start": "next start",
+    "test:posts": "node --test tests/post-index.test.mjs"
   },
   "keywords": [],
   "author": "",
