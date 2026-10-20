@@ -8,9 +8,6 @@ tags:
   - "백엔드"
 ---
 
-import Image from 'next/image'
-import architecture from '../../../public/images/artex-codex-bridge/architecture.png'
-
 ARTEX로 원큐오더의 보안 테스트를 준비하면서, 모델을 실행하는 구성을 바꿨습니다. Ollama로 로컬 모델을 띄우는 대신, 이미 로그인해서 사용하던 Codex CLI를 ARTEX에 연결했습니다.
 
 ARTEX에는 모델 API 주소를 입력하는 설정이 있지만, Codex CLI는 터미널에서 실행하는 프로그램입니다. 주소 하나를 바꾼다고 두 프로그램이 바로 연결되지는 않습니다. 그래서 **ARTEX의 HTTP 요청을 받아 Codex CLI를 실행하고, 결과를 다시 ARTEX가 이해하는 응답으로 돌려주는 Python 브리지**를 만들었습니다.
@@ -19,11 +16,24 @@ ARTEX에는 모델 API 주소를 입력하는 설정이 있지만, Codex CLI는 
 
 ## 전체 구조: HTTP 뒤에 CLI 프로세스를 연결했습니다
 
-<Image src={architecture} alt="ARTEX가 HTTP로 Python 브리지에 요청하면 브리지가 stdin으로 Codex CLI에 프롬프트를 전달합니다. CLI는 외부 모델 서비스와 통신하고 JSON 응답과 JSONL 사용량을 반환합니다. 도구는 ARTEX가 실행합니다." sizes="(max-width: 768px) 100vw, 1000px" style={{width:'100%',height:'auto'}} />
+```mermaid
+flowchart TD
+    subgraph LOCAL["로컬 머신"]
+        A["ARTEX 백엔드<br/>대화 이력 · 작업 관리"]
+        B["Python 브리지<br/>127.0.0.1:8766"]
+        C["Codex CLI<br/>codex exec"]
+        T["ARTEX 도구<br/>실제 명령 · HTTP 요청 실행"]
+        A -->|"HTTP: messages + tools"| B
+        B -->|"HTTP: content · tool_calls · usage"| A
+        B -->|"프로세스 시작 · stdin 프롬프트"| C
+        C -->|"JSON 결과 파일 · JSONL 이벤트"| B
+        A -->|"도구 실행"| T
+        T -->|"실행 결과"| A
+    end
+    C <-->|"외부 모델 통신"| M["OpenAI 모델 서비스<br/>추론 수행"]
+```
 
-<a href={architecture.src} target="_blank" rel="noreferrer">통신 구조 그림 크게 보기</a>
-
-그림은 실제 코드의 역할 분담을 바탕으로 이미지 생성 도구로 제작한 개념도입니다. 실행 화면이나 패킷 캡처는 아닙니다. 프로세스 내부의 파일 처리까지 포함한 정확한 흐름은 아래와 같습니다.
+ARTEX와 브리지 사이는 HTTP, 브리지와 CLI 사이는 프로세스 입출력으로 연결합니다. 도구 실행 경로는 ARTEX에만 연결되어 있습니다. 각 구간에서 전달하는 데이터는 다음과 같습니다.
 
 | 구간 | 통신 방식 | 전달하는 내용 |
 | --- | --- | --- |
@@ -128,6 +138,31 @@ CLI에서 받는 결과는 두 갈래입니다.
 임시 작업 디렉터리를 사용하고 개인 설정 로딩을 끈 이유는, 원래 작업하던 프로젝트의 지시문이나 개인 MCP 설정이 모델 연결에 섞이지 않게 하기 위해서입니다. 인증은 CLI가 관리합니다. 브리지가 인증 파일을 읽어서 토큰을 추출하거나 복사하지 않습니다.
 
 ## 3. 도구 호출은 어떻게 한 바퀴를 돌까요?
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant A as ARTEX
+    participant B as Python 브리지
+    participant C as Codex CLI
+    participant T as ARTEX 도구
+    A->>B: 대화 이력 + 도구 정의
+    B->>C: 새 프로세스 실행 · stdin 전달
+    Note over C: 모델 서비스에 추론 요청
+    C-->>B: 도구 호출 제안 + 사용량
+    Note over B: 도구 이름 · 인자 · 호출 조건 검증
+    B-->>A: 검증된 tool_calls
+    A->>T: 도구 실행
+    T-->>A: 실행 결과
+    Note over A: 호출 ID와 결과를 대화 이력에 추가
+    A->>B: 기존 이력 + tool 결과
+    B->>C: 새 프로세스에 전체 이력 전달
+    Note over C: 실행 결과를 바탕으로 추론
+    C-->>B: 최종 답변 + 사용량
+    B-->>A: content + usage
+```
+
+위 다이어그램은 도구를 한 번 실행한 뒤 최종 답변을 만드는 경우입니다. 추가 조회가 필요하면 도구 호출과 결과 전달 구간이 다시 반복됩니다.
 
 예를 들어 ARTEX가 `lookup`이라는 조회 도구를 제공한다고 가정해 보겠습니다. 아래 JSON은 통신 구조를 설명하기 위한 축약 예시이며, 원큐오더의 실제 요청 로그가 아닙니다.
 
