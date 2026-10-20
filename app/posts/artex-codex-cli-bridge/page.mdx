@@ -249,19 +249,7 @@ ARTEX와 브리지는 같은 호스트에서 실행해야 합니다. 브리지�
 | `503` | CLI 실행 파일 경로 |
 | `504` | 대화 길이, 추론 강도, 서버 타임아웃 |
 
-## 검증
-
-브리지 단위 테스트 **22개가 모두 통과**했습니다.
-
-```bash
-tools/codex_bridge/.venv/bin/python \
-  -m unittest discover -s tools/codex_bridge -v
-```
-
-가짜 CLI와 로컬 HTTP 서버로 대화·호출 ID 보존, 잘못된 도구와 인자 거절, 인증 실패 시 CLI 미호출, 동시성 제한, 타임아웃, 임시 파일 정리, JSON/SSE 사용량 전달을 확인했습니다. 실제 모델 품질이나 지연 시간을 측정하는 테스트는 아닙니다.
-
-이 브리지로 ARTEX가 도구를 실행하고 결과를 분석한 실제 사례는 [원큐오더 주문 조회 권한 점검 글](/posts/artex-wonq-order-access/)에 정리했습니다.
+## 참고
 
 - [브리지 구현 — bridge.py](https://github.com/namsh1125/ARTEX/blob/5fb8910be4ab497535602ab705f9c73933efb8b8/tools/codex_bridge/bridge.py)
-- [22개 테스트 — test_bridge.py](https://github.com/namsh1125/ARTEX/blob/5fb8910be4ab497535602ab705f9c73933efb8b8/tools/codex_bridge/test_bridge.py)
 - [설치·지원 범위 — README](https://github.com/namsh1125/ARTEX/blob/5fb8910be4ab497535602ab705f9c73933efb8b8/tools/codex_bridge/README.md)
