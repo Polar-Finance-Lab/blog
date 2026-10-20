@@ -16,12 +16,30 @@ ARTEX로 원큐오더의 보안 테스트를 준비하면서 가장 먼저 고�
 
 ## 전체 구조
 
-| 구간 | 통신 방식 | 전달하는 내용 |
-| --- | --- | --- |
-| ARTEX → 브리지 | 로컬 HTTP `POST /v1/chat/completions` | 대화 이력, 도구 정의, 호출 선택 조건 |
-| 브리지 → Codex CLI | 자식 프로세스의 `stdin` | 지시문과 대화·도구 정보를 합친 프롬프트 |
-| Codex CLI → 브리지 | 결과 JSON 파일 + 표준 출력 JSONL | 최종 답변·도구 호출 제안, 토큰 사용량 |
-| 브리지 → ARTEX | HTTP JSON 응답 | `content`, `tool_calls`, `usage` |
+```mermaid
+sequenceDiagram
+    autonumber
+    participant A as ARTEX
+    participant B as Python 브리지
+    participant C as Codex CLI
+    participant T as ARTEX 도구
+    A->>B: 대화 이력 + 도구 정의
+    B->>C: 새 프로세스 실행 · stdin 전달
+    Note over C: 모델 서비스에 추론 요청
+    C-->>B: 도구 호출 제안 + 사용량
+    Note over B: 도구 이름 · 인자 · 호출 조건 검증
+    B-->>A: 검증된 tool_calls
+    A->>T: 도구 실행
+    T-->>A: 실행 결과
+    Note over A: 호출 ID와 결과를 대화 이력에 추가
+    A->>B: 기존 이력 + tool 결과
+    B->>C: 새 프로세스에 전체 이력 전달
+    Note over C: 실행 결과를 바탕으로 추론
+    C-->>B: 최종 답변 + 사용량
+    B-->>A: content + usage
+```
+
+ARTEX와 브리지는 로컬 HTTP(`POST /v1/chat/completions`)로, 브리지와 CLI는 `stdin`과 결과 JSON 파일·표준 출력 JSONL로 통신합니다. 위 흐름은 도구를 한 번 실행하는 경우이며, 추가 조회가 필요하면 도구 호출과 결과 전달 구간이 반복됩니다.
 
 브리지는 로컬에서 실행되지만 추론까지 로컬에서 하는 것은 아닙니다. Codex CLI는 로그인한 계정으로 모델 서비스를 호출하므로, 대화와 도구 결과가 모델 입력에 포함됩니다. 이번 실험에는 제가 통제하는 환경의 더미 데이터만 사용했습니다.
 
@@ -100,30 +118,7 @@ with tempfile.TemporaryFile() as events, subprocess.Popen(
 
 ## 3. 도구 호출 한 바퀴
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant A as ARTEX
-    participant B as Python 브리지
-    participant C as Codex CLI
-    participant T as ARTEX 도구
-    A->>B: 대화 이력 + 도구 정의
-    B->>C: 새 프로세스 실행 · stdin 전달
-    Note over C: 모델 서비스에 추론 요청
-    C-->>B: 도구 호출 제안 + 사용량
-    Note over B: 도구 이름 · 인자 · 호출 조건 검증
-    B-->>A: 검증된 tool_calls
-    A->>T: 도구 실행
-    T-->>A: 실행 결과
-    Note over A: 호출 ID와 결과를 대화 이력에 추가
-    A->>B: 기존 이력 + tool 결과
-    B->>C: 새 프로세스에 전체 이력 전달
-    Note over C: 실행 결과를 바탕으로 추론
-    C-->>B: 최종 답변 + 사용량
-    B-->>A: content + usage
-```
-
-추가 조회가 필요하면 도구 호출과 결과 전달 구간이 반복됩니다. 아래 JSON은 통신 구조를 설명하기 위한 축약 예시이며, 실제 요청 로그가 아닙니다.
+아래 JSON은 위 다이어그램의 흐름을 설명하기 위한 축약 예시이며, 실제 요청 로그가 아닙니다.
 
 모델이 `lookup` 도구가 필요하다고 판단하면 CLI의 최종 결과는 다음과 같습니다. 이 시점에는 아무것도 실행되지 않았습니다.
 
